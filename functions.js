@@ -1,3 +1,5 @@
+
+//this function registers a musician asks the hourly rate, the instrument and returns to the menu once registered
 function registerMusician() {
     const name = prompt('Enter musician\'s name (3 to 30 characters): ');
     
