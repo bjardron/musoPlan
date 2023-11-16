@@ -50,3 +50,20 @@ class Musician {
       return "1989 heavy metal instrument of the year";
     }
   }
+
+//the troupe class uses an empty list to store member while the program is running. 
+//if data needs to be stored locally or online this can be done with an sql database. 
+  class Troupe {
+    constructor(name, genre, duration) {
+      this.name = name;
+      this.genre = genre;
+      this.duration = duration;
+      this.members = [];
+    }
+  
+    addMember(musician) {
+      this.members.push(musician);
+    }
+  }
+
+  module.exports = { Musician, Guitarist, Bassist, Percussionist, Flautist, Troupe };
