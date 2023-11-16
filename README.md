@@ -62,8 +62,3 @@ terminal based application to register and network musicians.
 - Ensure accuracy in data input to prevent errors.
 - Use proper file formatting during import/export operations.
 - Follow on-screen instructions for error handling and guidance.
-
-Tips and Best Practices:
-Ensure accuracy in data input to prevent errors.
-Use proper file formatting during import/export operations.
-Follow on-screen instructions for error handling and guidance.
