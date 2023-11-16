@@ -1,5 +1,6 @@
-const prompt = require('prompt-sync')();
-const fs = require('fs');
+const prompt = require('prompt-sync')(); //this calls prompt sync to prompt the user for inputs
+const fs = require('fs'); //this calls the file system from node.js to import and export text files
+
 
 const {
     Musician,
@@ -19,6 +20,6 @@ const {
     exportNamesToTextFile
     eturnToMenu
     showMenu
-} = require('functions.js')
+} = require('./functions.js')
 
-let importedNames = [];
+let importedNames = []; //this stores our imported names from text files to be used or exported later
