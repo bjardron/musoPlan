@@ -102,5 +102,81 @@ if (isNaN(duration) || duration < 0.5 || duration > 3) {
 const troupe = new Troupe(name, genre, duration);
 troupes.push(troupe);
 console.log('Troupe created successfully.');
-returnToMenu(true); //boolean 
+returnToMenu(true); //boolean statement that returns user to menu calling the return to menu function. 
+
+}
+
+function addMusicianToTroupe() {
+  if (musicians.length === 0) {
+    console.log('No musicians registered yet.'); //error handling for no created musicians. If array is empty it will throw this error'
+    showMenu();
+    return;
+  }
+
+  if (troupes.length === 0) {
+    console.log('No troupes created yet.'); //error handling for no created troupes. If array is empty it will throw this error'
+    showMenu();
+    return;
+  }
+
+  console.log('Available Troupes:');
+  troupes.forEach((troupe, index) => {
+    console.log(`${index + 1}. ${troupe.name}`);
+  });
+
+  let troupeIndex = parseInt(prompt('Select troupe to add musician (enter number): ')) - 1;
+  if (isNaN(troupeIndex) || troupeIndex < 0 || troupeIndex >= troupes.length) {
+    console.log('Invalid troupe selection.');
+    addMusicianToTroupe();
+    return;
+  }
+
+  console.log('Available Musicians:');
+  musicians.forEach((musician, index) => {
+    console.log(`${index + 1}. ${musician.name}`);
+  });
+
+  let musicianIndex = parseInt(prompt('Select musician to add to troupe (enter number): ')) - 1;
+  if (isNaN(musicianIndex) || musicianIndex < 0 || musicianIndex >= musicians.length) {
+    console.log('Invalid musician selection.');
+    addMusicianToTroupe();
+    return;
+  }
+
+  try {
+    troupes[troupeIndex].addMember(musicians[musicianIndex]);
+    console.log('Musician added to troupe.');
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+function calculateCost() {
+  if (troupes.length === 0) {
+    console.log('No troupes created yet.'); //error handling, refers to array, if array length = 0 then throws error
+    showMenu();
+    return;
+  }
+
+  console.log('Available Troupes:');
+  troupes.forEach((troupe, index) => {
+    console.log(`${index + 1}. ${troupe.name}`);
+  });
+
+  const troupeIndex = parseInt(prompt('Select troupe to calculate cost (enter number): ')) - 1;
+  if (isNaN(troupeIndex) || troupeIndex < 0 || troupeIndex >= troupes.length) { //error handling for indexing. 
+    console.log('Invalid troupe selection.');
+    calculateCost();
+    return;
+  }
+
+  const selectedTroupe = troupes[troupeIndex];
+  let totalCost = 0;
+
+  selectedTroupe.members.forEach(member => {
+    totalCost += member.hourlyRate * selectedTroupe.duration; //formula for cost calculation. Uses duration of show x hourly rate
+  });
+
+  console.log(`The cost of deploying ${selectedTroupe.name} for ${selectedTroupe.duration} hours is $${totalCost}.`); //logs message to user with calculated cost
+  showMenu(); //shows the menu
 }
