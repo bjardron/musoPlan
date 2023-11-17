@@ -150,7 +150,7 @@ function addMusicianToTroupe() {
     console.log(error.message);
   }
 }
-
+//function to calculate cost of deploying a troupe
 function calculateCost() {
   if (troupes.length === 0) {
     console.log('No troupes created yet.'); //error handling, refers to array, if array length = 0 then throws error
@@ -171,7 +171,7 @@ function calculateCost() {
   }
 
   const selectedTroupe = troupes[troupeIndex];
-  let totalCost = 0;
+  let totalCost = 0; //set total cost as 0 before introducing variables
 
   selectedTroupe.members.forEach(member => {
     totalCost += member.hourlyRate * selectedTroupe.duration; //formula for cost calculation. Uses duration of show x hourly rate
@@ -179,4 +179,46 @@ function calculateCost() {
 
   console.log(`The cost of deploying ${selectedTroupe.name} for ${selectedTroupe.duration} hours is $${totalCost}.`); //logs message to user with calculated cost
   showMenu(); //shows the menu
+}
+
+function importNamesFromTextFile() {
+  const filePath = prompt('Enter the file path: ');
+
+  try {
+    const data = fs.readFileSync(filePath, 'utf-8'); //use file sync to read the uploaded file
+    importedNames = data.split('\n').filter(name => name.trim() !== ''); //split is used to split the content into an array of substrings, breaking it wherever a newline character (\n) is found.
+
+    if (importedNames.length === 0) {
+      console.log('No names found in the file.'); //error handling, if the array is empty it will return this error
+    } else {
+      console.log('Imported names:');
+      importedNames.forEach((name, index) => {
+        console.log(`${index + 1}. ${name}`); //prints the array values starting from 1, includes the name variable for readability
+      });
+    }
+  } catch (err) {
+    console.error('Error reading the file:', err); //uses catch statement to catch file read error. 
+  } finally {
+    returnToMenu(); //return user to menu on error
+  }
+}
+
+function exportNamesToTextFile() {
+  if (importedNames.length === 0) {
+    console.log('No names to export.'); //error handling for export names to file. If array is empty will return this statement
+    returnToMenu(); //return user to menu on error. 
+    return;
+  }
+
+  const content = importedNames.join('\n'); //joins array values on a new lines.
+  const fileName = prompt('Enter the file name to export: ');  //gives user input to choose name of saved file
+
+  try {
+    fs.writeFileSync(`${fileName}.txt`, content);
+    console.log(`Names exported to ${fileName}.txt`);  //successful write to text will display this message
+  } catch (err) {
+    console.error('Error exporting names:', err); //error handling for name export
+  } finally {
+    returnToMenu(); //return user to menu
+  }
 }
