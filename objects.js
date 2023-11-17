@@ -65,5 +65,5 @@ class Musician {
       this.members.push(musician);
     }
   }
-
+//this exports the classes to be called by index.js
   module.exports = { Musician, Guitarist, Bassist, Percussionist, Flautist, Troupe };
