@@ -222,3 +222,128 @@ function exportNamesToTextFile() {
     returnToMenu(); //return user to menu
   }
 }
+//function to show summary description of troupe
+function provideSummaryDescriptionOfTroupe() {
+  console.log('List of Troupes:');
+  troupes.forEach((troupe, index) => {
+    console.log(`${index + 1}. ${troupe.name}`); //uses indexed values from array and logs to console
+  });
+
+  const troupeSelection = prompt('Select a troupe by name or number: ');
+  const selectedTroupe =
+    isNaN(troupeSelection) ? //conditional statement: isNaN(troupeSelection) checks if the input is not a number.
+    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :  //searches array for a troupe whose name matches the user input (case insensitive due to the use of toLowerCase()).
+    troupes[parseInt(troupeSelection) - 1]; // converts troupeSelection to an integer using parseInt() and retrieves the corresponding troupe from the troupes array
+
+  if (!selectedTroupe) {
+    console.log('Invalid troupe selection.');
+    return; //error handling using boolean value. if the user input does not match any available troupes it returns an error
+  }
+
+  const instrumentCount = {}; //initializes an empty object that will store counts for each instrument found among the members of the selected troupe.
+
+  selectedTroupe.members.forEach(member => { //The selectedTroupe.members.forEach() loop iterates through each member of the troupe.
+    instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1; //For each member, it updates the instrumentCount object:
+  }); 
+
+  console.log(`Troupe Name: ${selectedTroupe.name}`); 
+  for (const instrument in instrumentCount) {
+    console.log(`${instrument}: ${instrumentCount[instrument]}`); //For each instrument, it logs the instrument's name and its corresponding count to the console: console.log(${instrument}: ${instrumentCount[instrument]});
+  }
+
+  returnToMenu();
+}
+//function to provide a detailed description of a selected troupe
+function provideDetailedDescriptionOfTroupe() {
+  //displaying a list of available troupes
+  console.log('List of Troupes:');
+  troupes.forEach((troupe, index) => {
+    console.log(`${index + 1}. ${troupe.name}`);
+  });
+
+  //asking the user to select a troupe by name or number
+  const troupeSelection = prompt('Select a troupe by name or number: ');
+  //determining the selected troupe based on user input
+  const selectedTroupe =
+    isNaN(troupeSelection) ?
+    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :
+    troupes[parseInt(troupeSelection) - 1];
+
+  //handling invalid troupe selection
+  if (!selectedTroupe) {
+    console.log('Invalid troupe selection.');
+    returnToMenu();
+    return;
+  }
+
+  //displaying the name of the selected troupe
+  console.log(`Troupe Name: ${selectedTroupe.name}`);
+
+  //object to count the number of each instrument in the selected troupe
+  const instrumentCount = {};
+
+  //counting the number of members playing each instrument in the selected troupe
+  selectedTroupe.members.forEach(member => {
+    instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1;
+  });
+
+  //iterating through each instrument in the instrumentCount object
+  for (const instrument in instrumentCount) {
+    console.log(`${instrument}s:`); // Displaying the instrument name (plural form)
+    
+    //filtering members who play the current instrument
+    const instrumentMembers = selectedTroupe.members.filter(member => member.instrument === instrument);
+    
+    //displaying information about members playing the current instrument
+    instrumentMembers.forEach(member => {
+      console.log(`Name: ${member.name}, Hourly Rate: $${member.hourlyRate}`);
+    });
+
+    //displaying an interesting fact for specific instruments
+    if (instrument === 'Guitarist') {
+      const guitarist = new Guitarist('', 0, 0, '');
+      console.log(`Interesting Fact: ${guitarist.getInterestingFact()}`);
+    } else if (instrument === 'Bassist') {
+      const bassist = new Bassist('', 0, 0);
+      console.log(`Interesting Fact: ${bassist.getInterestingFact()}`);
+    } else if (instrument === 'Percussionist') {
+      const percussionist = new Percussionist('', 0, 0);
+      console.log(`Interesting Fact: ${percussionist.getInterestingFact()}`);
+    } else if (instrument === 'Flautist') {
+      const flautist = new Flautist('', 0, 0);
+      console.log(`Interesting Fact: ${flautist.getInterestingFact()}`);
+    }
+  }
+
+  //returns user to menu
+  returnToMenu();
+}
+
+function returnToMenu(afterOperation = false) { 
+  if (!afterOperation) {
+    const returnOption = prompt('Press Enter to return to the menu.');
+    if (returnOption === '') {
+      return true; //return a boolean value to indicate to the caller to show the menu
+    } else {
+      returnToMenu();
+    }
+  }
+  return false;
+}
+
+//wrote menu as a function to enable user to return to menu after each use of program to keep stored array data available until the program is exited
+function showMenu() {
+  console.log('\x1b[36m=====================================\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m\x1b[35m     MUSOPLAN\x1b[0m \x1b[32mMUSIC\x1b[0m \x1b[33mMANAGEMENT \x1b[36m    |\x1b[0m');
+  console.log('\x1b[36m=====================================\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[32m1. Create and Register Member   \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[33m2. Create Troupe                \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[34m3. Add Member to Troupe         \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[35m4. Calculate Show Costs         \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[36m5. Export Troupe Names          \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[32m6. Import Troupe Names          \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[33m7. Summary Troupe Info          \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[34m8. Detailed Troupe Info         \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m|\x1b[0m   \x1b[35m9. Exit the program             \x1b[36m|\x1b[0m');
+  console.log('\x1b[36m=====================================\x1b[0m');
+}
