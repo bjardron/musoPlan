@@ -1,3 +1,18 @@
+const prompt = require('prompt-sync')();
+const fs = require('fs');
+const {
+  Musician,
+  Guitarist,
+  Bassist,
+  Percussionist,
+  Flautist,
+  Troupe,
+} = require('./objects.js');
+let importedNames = [];
+let musicians = [];
+let troupes = [];
+const border = '\x1b[36m================================\x1b[0m';
+
 
 //this function registers a musician asks the hourly rate, the instrument and returns to the menu once registered
 function registerMusician() {
@@ -57,9 +72,8 @@ function registerMusician() {
   }
 }
 
-//this function creates a troupe
+//creates a troupe
 function createTroupe() {
-  const border = '\x1b[36m================================\x1b[0m';
   console.log(border);
   console.log('\x1b[36m| Choose a genre for the troupe |\x1b[0m');
   console.log(border);
@@ -109,7 +123,6 @@ returnToMenu(true); //boolean statement that returns user to menu calling the re
 function addMusicianToTroupe() {
   if (musicians.length === 0) {
     console.log('No musicians registered yet.'); //error handling for no created musicians. If array is empty it will throw this error'
-    showMenu();
     return;
   }
 
@@ -154,7 +167,6 @@ function addMusicianToTroupe() {
 function calculateCost() {
   if (troupes.length === 0) {
     console.log('No troupes created yet.'); //error handling, refers to array, if array length = 0 then throws error
-    showMenu();
     return;
   }
 
@@ -178,88 +190,110 @@ function calculateCost() {
   });
 
   console.log(`The cost of deploying ${selectedTroupe.name} for ${selectedTroupe.duration} hours is $${totalCost}.`); //logs message to user with calculated cost
-  showMenu(); //shows the menu
 }
 
 function importNamesFromTextFile() {
-  const filePath = prompt('Enter the file path: ');
+  let filePath = prompt('Enter the file path: ');
 
   try {
-    const data = fs.readFileSync(filePath, 'utf-8'); //use file sync to read the uploaded file
-    importedNames = data.split('\n').filter(name => name.trim() !== ''); //split is used to split the content into an array of substrings, breaking it wherever a newline character (\n) is found.
+    let data = fs.readFileSync(filePath, 'utf-8'); // Read the file content
+    let troupeDetails = data.split('\n').filter(line => line.trim() !== ''); // Split content into lines and remove empty lines
 
-    if (importedNames.length === 0) {
-      console.log('No names found in the file.'); //error handling, if the array is empty it will return this error
+    if (troupeDetails.length === 0) {
+      console.log('No troupe details found in the file.'); // Error handling if no troupe details are found
     } else {
-      console.log('Imported names:');
-      importedNames.forEach((name, index) => {
-        console.log(`${index + 1}. ${name}`); //prints the array values starting from 1, includes the name variable for readability
+      console.log('Imported troupe details:');
+      troupeDetails.forEach((line, index) => {
+        const details = line.split(','); // Assuming details are separated by commas
+        const [name, duration, genre] = details;
+        console.log(`${index + 1}. Name: ${name}, Duration: ${duration}, Genre: ${genre}`);
+        // Create a new Troupe object and push it into the troupes array
+        troupes.push(new Troupe(name.trim(), genre.trim(), parseFloat(duration.trim())));
       });
     }
   } catch (err) {
-    console.error('Error reading the file:', err); //uses catch statement to catch file read error. 
+    console.error('Error reading the file:', err); // Catch file read error
   } finally {
-    returnToMenu(); //return user to menu on error
+    returnToMenu(); // Return user to the menu on error or completion
   }
 }
 
 function exportNamesToTextFile() {
-  if (importedNames.length === 0) {
-    console.log('No names to export.'); //error handling for export names to file. If array is empty will return this statement
-    returnToMenu(); //return user to menu on error. 
+  let allNames = [...importedNames];
+
+  musicians.forEach((musician) => {
+    allNames.push(musician.name);
+  });
+
+  troupes.forEach((troupe) => {
+    allNames.push(troupe.name);
+  });
+
+  if (allNames.length === 0) {
+    console.log('No names to export.');
+    returnToMenu();
     return;
   }
 
-  const content = importedNames.join('\n'); //joins array values on a new lines.
-  const fileName = prompt('Enter the file name to export: ');  //gives user input to choose name of saved file
+  let content = allNames.join('\n');
+  let fileName = prompt('Enter the file name to export: ');
 
   try {
     fs.writeFileSync(`${fileName}.txt`, content);
-    console.log(`Names exported to ${fileName}.txt`);  //successful write to text will display this message
+    console.log(`Names exported to ${fileName}.txt`);
   } catch (err) {
-    console.error('Error exporting names:', err); //error handling for name export
+    console.error('Error exporting names:', err);
   } finally {
-    returnToMenu(); //return user to menu
+    returnToMenu();
   }
 }
+
 //function to show summary description of troupe
 function provideSummaryDescriptionOfTroupe() {
-  console.log('List of Troupes:');
-  troupes.forEach((troupe, index) => {
-    console.log(`${index + 1}. ${troupe.name}`); //uses indexed values from array and logs to console
-  });
+  console.log(border);
+  console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
+  console.log(border);
+
+  // Show list of troupes
 
   const troupeSelection = prompt('Select a troupe by name or number: ');
   const selectedTroupe =
-    isNaN(troupeSelection) ? //conditional statement: isNaN(troupeSelection) checks if the input is not a number.
-    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :  //searches array for a troupe whose name matches the user input (case insensitive due to the use of toLowerCase()).
-    troupes[parseInt(troupeSelection) - 1]; // converts troupeSelection to an integer using parseInt() and retrieves the corresponding troupe from the troupes array
+    isNaN(troupeSelection) ?
+    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :
+    troupes[parseInt(troupeSelection) - 1];
 
-  if (!selectedTroupe) {
-    console.log('Invalid troupe selection.');
-    return; //error handling using boolean value. if the user input does not match any available troupes it returns an error
+  if (!selectedTroupe || !selectedTroupe.members || !Array.isArray(selectedTroupe.members)) {
+    console.log('Invalid troupe or no members found.');
+    returnToMenu();
+    return;
   }
 
-  const instrumentCount = {}; //initializes an empty object that will store counts for each instrument found among the members of the selected troupe.
+  console.log(border);
+  console.log(`\x1b[36m|\x1b[0m       Troupe Name: ${selectedTroupe.name.padEnd(20)} \x1b[36m|\x1b[0m`);
+  console.log(border);
 
-  selectedTroupe.members.forEach(member => { //The selectedTroupe.members.forEach() loop iterates through each member of the troupe.
-    instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1; //For each member, it updates the instrumentCount object:
-  }); 
+  const instrumentCount = {};
+  selectedTroupe.members.forEach(member => {
+    instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1;
+  });
 
-  console.log(`Troupe Name: ${selectedTroupe.name}`); 
   for (const instrument in instrumentCount) {
-    console.log(`${instrument}: ${instrumentCount[instrument]}`); //For each instrument, it logs the instrument's name and its corresponding count to the console: console.log(${instrument}: ${instrumentCount[instrument]});
+    console.log(`\x1b[36m|\x1b[0m   ${getInstrumentEmoji(instrument)} ${instrument.padEnd(15)}: ${instrumentCount[instrument].toString().padStart(3)} \x1b[36m|\x1b[0m`);
   }
 
+  console.log(border);
   returnToMenu();
 }
-//function to provide a detailed description of a selected troupe
+
 function provideDetailedDescriptionOfTroupe() {
   //displaying a list of available troupes
-  console.log('List of Troupes:');
+  console.log(border);
+  console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
+  console.log(border);
   troupes.forEach((troupe, index) => {
     console.log(`${index + 1}. ${troupe.name}`);
   });
+  console.log(border);
 
   //asking the user to select a troupe by name or number
   const troupeSelection = prompt('Select a troupe by name or number: ');
@@ -277,7 +311,9 @@ function provideDetailedDescriptionOfTroupe() {
   }
 
   //displaying the name of the selected troupe
+  console.log(border);
   console.log(`Troupe Name: ${selectedTroupe.name}`);
+  console.log(border);
 
   //object to count the number of each instrument in the selected troupe
   const instrumentCount = {};
@@ -289,30 +325,31 @@ function provideDetailedDescriptionOfTroupe() {
 
   //iterating through each instrument in the instrumentCount object
   for (const instrument in instrumentCount) {
+    console.log(border);
     console.log(`${instrument}s:`); // Displaying the instrument name (plural form)
-    
+
     //filtering members who play the current instrument
     const instrumentMembers = selectedTroupe.members.filter(member => member.instrument === instrument);
-    
+
     //displaying information about members playing the current instrument
     instrumentMembers.forEach(member => {
       console.log(`Name: ${member.name}, Hourly Rate: $${member.hourlyRate}`);
+      //displaying an interesting fact for specific instruments
+      if (instrument === 'Guitarist') {
+        const guitarist = new Guitarist('', 0, 0, '');
+        console.log(`Interesting Fact: ${guitarist.getInterestingFact()}`);
+      } else if (instrument === 'Bassist') {
+        const bassist = new Bassist('', 0, 0);
+        console.log(`Interesting Fact: ${bassist.getInterestingFact()}`);
+      } else if (instrument === 'Percussionist') {
+        const percussionist = new Percussionist('', 0, 0);
+        console.log(`Interesting Fact: ${percussionist.getInterestingFact()}`);
+      } else if (instrument === 'Flautist') {
+        const flautist = new Flautist('', 0, 0);
+        console.log(`Interesting Fact: ${flautist.getInterestingFact()}`);
+      }
     });
-
-    //displaying an interesting fact for specific instruments
-    if (instrument === 'Guitarist') {
-      const guitarist = new Guitarist('', 0, 0, '');
-      console.log(`Interesting Fact: ${guitarist.getInterestingFact()}`);
-    } else if (instrument === 'Bassist') {
-      const bassist = new Bassist('', 0, 0);
-      console.log(`Interesting Fact: ${bassist.getInterestingFact()}`);
-    } else if (instrument === 'Percussionist') {
-      const percussionist = new Percussionist('', 0, 0);
-      console.log(`Interesting Fact: ${percussionist.getInterestingFact()}`);
-    } else if (instrument === 'Flautist') {
-      const flautist = new Flautist('', 0, 0);
-      console.log(`Interesting Fact: ${flautist.getInterestingFact()}`);
-    }
+    console.log(border);
   }
 
   //returns user to menu
@@ -323,9 +360,9 @@ function returnToMenu(afterOperation = false) {
   if (!afterOperation) {
     const returnOption = prompt('Press Enter to return to the menu.');
     if (returnOption === '') {
-      return true; //return a boolean value to indicate to the caller to show the menu
+      return true; // Return a boolean value to indicate to the caller to show the menu
     } else {
-      returnToMenu();
+      return false; // Return false to signal not showing the menu
     }
   }
   return false;
@@ -347,3 +384,23 @@ function showMenu() {
   console.log('\x1b[36m|\x1b[0m   \x1b[35m9. Exit the program             \x1b[36m|\x1b[0m');
   console.log('\x1b[36m=====================================\x1b[0m');
 }
+
+function exitProgram() {
+  console.log('Exiting the program. Goodbye!');
+  process.exit();
+}
+
+
+module.exports = {
+registerMusician,
+createTroupe,
+addMusicianToTroupe,
+calculateCost,
+importNamesFromTextFile,
+exportNamesToTextFile,
+provideSummaryDescriptionOfTroupe,
+provideDetailedDescriptionOfTroupe,
+returnToMenu,
+showMenu,
+exitProgram,
+};
