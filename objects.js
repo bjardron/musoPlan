@@ -58,10 +58,9 @@ class Musician {
 //the troupe class uses an empty list to store member while the program is running. 
 //if data needs to be stored locally or online this can be done with an sql database. 
   class Troupe {
-    constructor(name, genre, duration) {
+    constructor(name, genre) {
       this.name = name;
       this.genre = genre;
-      this.duration = duration;
       this.members = [];
     }
   
