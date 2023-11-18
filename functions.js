@@ -13,7 +13,6 @@ let musicians = [];
 let troupes = [];
 const border = '\x1b[36m================================\x1b[0m';
 
-
 //this function registers a musician asks the hourly rate, the instrument and returns to the menu once registered
 function registerMusician() {
   const name = prompt('Enter musician\'s name (3 to 30 characters): ');
@@ -71,7 +70,6 @@ function registerMusician() {
       break;
   }
 }
-
 //creates a troupe
 function createTroupe() {
   console.log(border);
@@ -117,7 +115,6 @@ const troupe = new Troupe(name, genre, duration);
 troupes.push(troupe);
 console.log('Troupe created successfully.');
 returnToMenu(true); //boolean statement that returns user to menu calling the return to menu function. 
-
 }
 
 function addMusicianToTroupe() {
@@ -217,6 +214,7 @@ function importNamesFromTextFile() {
     returnToMenu(); // Return user to the menu on error or completion
   }
 }
+
 function exportNamesToTextFile() {
   //create a new array and copy the importedNames array into it
   let allNames = [...importedNames];
@@ -256,8 +254,6 @@ function exportNamesToTextFile() {
     returnToMenu();
   }
 }
-
-
 //function to show summary description of a troupe
 function provideSummaryDescriptionOfTroupe() { 
   console.log(border);
@@ -271,8 +267,7 @@ function provideSummaryDescriptionOfTroupe() {
 
   //ask the user to select a troupe by name or number
   const troupeSelection = prompt('Select a troupe by name or number: ');
-
-  //determine the selected troupe based on user input
+ //determine the selected troupe based on user input
   const selectedTroupe =
     isNaN(troupeSelection) ?
     troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) : //parses everything to lower case to make input case insensitive
@@ -328,7 +323,6 @@ function provideDetailedDescriptionOfTroupe() {
     returnToMenu();
     return;
   }
-
   //displaying the name of the selected troupe
   console.log(border);
   console.log(`Troupe Name: ${selectedTroupe.name}`);
@@ -336,12 +330,10 @@ function provideDetailedDescriptionOfTroupe() {
 
   //object to count the number of each instrument in the selected troupe
   const instrumentCount = {};
-
-  //counting the number of members playing each instrument in the selected troupe
+ //counting the number of members playing each instrument in the selected troupe
   selectedTroupe.members.forEach(member => {
     instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1;
   });
-
   //iterating through each instrument in the instrumentCount object
   for (const instrument in instrumentCount) {
     console.log(border);
@@ -386,7 +378,6 @@ function returnToMenu(afterOperation = false) {
   }
   return false;
 }
-
 //wrote menu as a function to enable user to return to menu after each use of program to keep stored array data available until the program is exited
 function showMenu() {
   console.log('\x1b[36m=====================================\x1b[0m');
@@ -424,7 +415,6 @@ function getInstrumentEmoji(instrument) {
   }
 }
 
-
 module.exports = {
 registerMusician,
 createTroupe,
@@ -437,4 +427,4 @@ provideDetailedDescriptionOfTroupe,
 returnToMenu,
 showMenu,
 exitProgram,
-};
+}
