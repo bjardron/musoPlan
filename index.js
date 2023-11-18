@@ -1,31 +1,24 @@
 const prompt = require('prompt-sync')(); //calls prompt sync to prompt the user for inputs
 const fs = require('fs'); //calls the file system from node.js to import and export text files
+let importedNames = [];
+let musicians = [];
+let troupes = [];
 
-//calls from objects.js to define our classes
-const {
-    Musician,
-    Guitarist,
-    Bassist,
-    Percussionist,
-    Flautist,
-    Troupe
-  } = require('./objects.js');
 
 //calls from functions.js to use our intended functions
 const {
-    registerMusician,
-    createTroupe,
-    addMusicianToTroupe,
-    calculateCost,
-    importNamesFromTextFile,
-    exportNamesToTextFile,
-    returnToMenu,
-    showMenu,
-} = require('./functions.js')
+  registerMusician,
+  createTroupe,
+  addMusicianToTroupe,
+  calculateCost,
+  importNamesFromTextFile,
+  exportNamesToTextFile,
+  provideSummaryDescriptionOfTroupe,
+  provideDetailedDescriptionOfTroupe,
+  showMenu,
+  exitProgram,
+} = require('./functions.js');
 
-let importedNames = []; //stores our imported names from text files to be used or exported later
-const musicians = [];
-const troupes = []; //arrays for temporary data storage
 
 while (true) {
   showMenu();
