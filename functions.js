@@ -103,15 +103,8 @@ switch (genreChoice) {
 }
 
 const name = prompt('Enter troupe name: ');
-let duration = parseFloat(prompt('Enter duration (in hours, between 0.5 and 3): '));
 
-if (isNaN(duration) || duration < 0.5 || duration > 3) {  
-  console.log('Duration should be a number between 0.5 and 3 hours.'); //error handling for duration of show. if it is not a number or outside the declared range it will throw an error to user
-  createTroupe();
-  return;
-}
-
-const troupe = new Troupe(name, genre, duration);
+const troupe = new Troupe(name, genre);
 troupes.push(troupe);
 console.log('Troupe created successfully.');
 returnToMenu(true); //boolean statement that returns user to menu calling the return to menu function. 
@@ -163,7 +156,7 @@ function addMusicianToTroupe() {
 //function to calculate cost of deploying a troupe
 function calculateCost() {
   if (troupes.length === 0) {
-    console.log('No troupes created yet.'); //error handling, refers to array, if array length = 0 then throws error
+    console.log('No troupes created yet.');
     return;
   }
 
@@ -173,20 +166,28 @@ function calculateCost() {
   });
 
   const troupeIndex = parseInt(prompt('Select troupe to calculate cost (enter number): ')) - 1;
-  if (isNaN(troupeIndex) || troupeIndex < 0 || troupeIndex >= troupes.length) { //error handling for indexing. 
+  if (isNaN(troupeIndex) || troupeIndex < 0 || troupeIndex >= troupes.length) {
     console.log('Invalid troupe selection.');
     calculateCost();
     return;
   }
 
   const selectedTroupe = troupes[troupeIndex];
-  let totalCost = 0; //set total cost as 0 before introducing variables
+  const duration = parseFloat(prompt('Enter show duration between 0.5 and 3 hours: ')); // Prompt for duration here
+
+  if (isNaN(duration) || duration < 0.5 || duration > 3) {
+    console.log('Duration should be a number between 0.5 and 3 hours.');
+    calculateCost();
+    return;
+  }
+
+  let totalCost = 0;
 
   selectedTroupe.members.forEach(member => {
-    totalCost += member.hourlyRate * selectedTroupe.duration; //formula for cost calculation. Uses duration of show x hourly rate
+    totalCost += member.hourlyRate * duration; // Calculate cost using the provided duration
   });
 
-  console.log(`The cost of deploying ${selectedTroupe.name} for ${selectedTroupe.duration} hours is $${totalCost}.`); //logs message to user with calculated cost
+  console.log(`The cost of deploying ${selectedTroupe.name} for ${duration} hours is $${totalCost}.`);
 }
 
 function importNamesFromTextFile() {
@@ -202,10 +203,10 @@ function importNamesFromTextFile() {
       console.log('Imported troupe details:');
       troupeDetails.forEach((line, index) => {
         const details = line.split(','); // Assuming details are separated by commas
-        const [name, duration, genre] = details;
-        console.log(`${index + 1}. Name: ${name}, Duration: ${duration}, Genre: ${genre}`);
+        const [name, genre] = details;
+        console.log(`${index + 1}. Name: ${name}, Genre: ${genre}`);
         // Create a new Troupe object and push it into the troupes array
-        troupes.push(new Troupe(name.trim(), genre.trim(), parseFloat(duration.trim())));
+        troupes.push(new Troupe(name.trim(), genre.trim(),));
       });
     }
   } catch (err) {
