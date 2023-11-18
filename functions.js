@@ -8,6 +8,7 @@ const {
   Flautist,
   Troupe,
 } = require('./objects.js');
+
 let importedNames = [];
 let musicians = [];
 let troupes = [];
@@ -187,7 +188,8 @@ function calculateCost() {
     totalCost += member.hourlyRate * duration; // Calculate cost using the provided duration
   });
 
-  console.log(`The cost of deploying ${selectedTroupe.name} for ${duration} hours is $${totalCost}.`);
+  console.log(`The cost of sending ${selectedTroupe.name} for ${duration} hours will be $${totalCost}.`);
+
 }
 
 function importNamesFromTextFile() {
@@ -219,7 +221,6 @@ function importNamesFromTextFile() {
     returnToMenu(); //return user to the menu
   }
 }
-
 
 function exportNamesToTextFile() {
   //create a new array and copy the importedNames array into it
@@ -373,16 +374,16 @@ function provideDetailedDescriptionOfTroupe() {
   returnToMenu();
 }
 
-function returnToMenu(afterOperation = false) { 
+function returnToMenu(afterOperation = false) { //uses afterOperation as a parameter with a default value of false
   if (!afterOperation) {
-    const returnOption = prompt('Press Enter to return to the menu.');
-    if (returnOption === '') {
+    const returnOption = prompt('Press Enter to return to the menu.'); //declares returnoption as a prompt for user to press enter
+    if (returnOption === '') { //condition to check the users input is an empty string the function returns true and initiates and returns the user to the menu
       return true; //return a boolean value to indicate to the caller to show the menu
     } else {
-      return false; //return false to signal not showing the menu
+      return false; //if the string is not empty it will return false and not show the menu
     }
   }
-  return false;
+  return false; //if afterOperation is true the function skips the prompt and just returns false and shows the menu
 }
 //wrote menu as a function to enable user to return to menu after each use of program to keep stored array data available until the program is exited
 function showMenu() {
