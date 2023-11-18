@@ -254,7 +254,10 @@ function provideSummaryDescriptionOfTroupe() {
   console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
   console.log(border);
 
-  // Show list of troupes
+  console.log('List of Troupes:'); // Display the list of troupes
+  troupes.forEach((troupe, index) => {
+    console.log(`${index + 1}. ${troupe.name}`);
+  });
 
   const troupeSelection = prompt('Select a troupe by name or number: ');
   const selectedTroupe =
@@ -269,7 +272,7 @@ function provideSummaryDescriptionOfTroupe() {
   }
 
   console.log(border);
-  console.log(`\x1b[36m|\x1b[0m       Troupe Name: ${selectedTroupe.name.padEnd(20)} \x1b[36m|\x1b[0m`);
+  console.log(`\x1b[36m|\x1b[0m    \x1b[35mTroupe \x1b[32mName: \x1b[33m${selectedTroupe.name.padEnd(12)} \x1b[36m|\x1b[0m`);
   console.log(border);
 
   const instrumentCount = {};
@@ -278,7 +281,7 @@ function provideSummaryDescriptionOfTroupe() {
   });
 
   for (const instrument in instrumentCount) {
-    console.log(`\x1b[36m|\x1b[0m   ${getInstrumentEmoji(instrument)} ${instrument.padEnd(15)}: ${instrumentCount[instrument].toString().padStart(3)} \x1b[36m|\x1b[0m`);
+    console.log(`\x1b[36m|\x1b[0m   ${getInstrumentEmoji(instrument)} ${instrument.padEnd(18)}: ${instrumentCount[instrument].toString().padStart(3)} \x1b[36m|\x1b[0m`);
   }
 
   console.log(border);
@@ -388,6 +391,21 @@ function showMenu() {
 function exitProgram() {
   console.log('Exiting the program. Goodbye!');
   process.exit();
+}
+
+function getInstrumentEmoji(instrument) {
+  switch (instrument.toLowerCase()) {
+    case 'guitarist':
+      return '🎸';
+    case 'bassist':
+      return '🎻';
+    case 'percussionist':
+      return '🥁';
+    case 'flautist':
+      return '🎶';
+    default:
+      return ''; // Return empty string for unknown instruments
+  }
 }
 
 
