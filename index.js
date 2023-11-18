@@ -1,8 +1,6 @@
 const prompt = require('prompt-sync')(); //calls prompt sync to prompt the user for inputs
 const fs = require('fs'); //calls the file system from node.js to import and export text files
 
-
-
 //calls from functions.js to use our intended functions
 const {
   registerMusician,
@@ -16,7 +14,6 @@ const {
   showMenu,
   exitProgram,
 } = require('./functions.js');
-
 
 while (true) {
   showMenu();
@@ -55,4 +52,3 @@ while (true) {
       break;
   }
 }
-
