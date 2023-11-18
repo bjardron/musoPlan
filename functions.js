@@ -194,27 +194,32 @@ function importNamesFromTextFile() {
   let filePath = prompt('Enter the file path: ');
 
   try {
-    let data = fs.readFileSync(filePath, 'utf-8'); // Read the file content
-    let troupeDetails = data.split('\n').filter(line => line.trim() !== ''); // Split content into lines and remove empty lines
+    let data = fs.readFileSync(filePath, 'utf-8'); //read the file content
+    let troupeDetails = data.split('\n').filter(line => line.trim() !== ''); //split content into lines and remove empty lines
 
     if (troupeDetails.length === 0) {
-      console.log('No troupe details found in the file.'); // Error handling if no troupe details are found
+      console.log('No troupe details found in the file.'); //error handling if no troupe details are found
     } else {
       console.log('Imported troupe details:');
       troupeDetails.forEach((line, index) => {
-        const details = line.split(','); // Assuming details are separated by commas
-        const [name, genre] = details;
-        console.log(`${index + 1}. Name: ${name}, Genre: ${genre}`);
-        // Create a new Troupe object and push it into the troupes array
-        troupes.push(new Troupe(name.trim(), genre.trim(),));
+        const details = line.split(','); //assuming details are separated by commas
+        if (details.length >= 2) {
+          const [name, genre] = details;
+          console.log(`${index + 1}. Name: ${name}, Genre: ${genre}`);
+          troupes.push(new Troupe(name.trim(), genre.trim())); //create a new Troupe object and push it into the troupes array
+        } else {
+          console.log(`Invalid format in line ${index + 1}. Skipping...`); //invalid format handling
+        }
       });
     }
   } catch (err) {
-    console.error('Error reading the file:', err); // Catch file read error
+    console.error('Error reading the file or file not found. Please enter a valid file path.'); //catch file read error or file not found error
+  
   } finally {
-    returnToMenu(); // Return user to the menu on error or completion
+    returnToMenu(); //return user to the menu
   }
 }
+
 
 function exportNamesToTextFile() {
   //create a new array and copy the importedNames array into it
@@ -306,7 +311,7 @@ function provideDetailedDescriptionOfTroupe() {
   console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
   console.log(border);
   troupes.forEach((troupe, index) => {
-    console.log(`${index + 1}. ${troupe.name}`); 
+  console.log(`${index + 1}. ${troupe.name}`); 
   });
   console.log(border);
 
