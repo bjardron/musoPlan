@@ -217,54 +217,68 @@ function importNamesFromTextFile() {
     returnToMenu(); // Return user to the menu on error or completion
   }
 }
-
 function exportNamesToTextFile() {
+  //create a new array and copy the importedNames array into it
   let allNames = [...importedNames];
 
+  //add musician names to the allNames array
   musicians.forEach((musician) => {
     allNames.push(musician.name);
   });
 
+  //add troupe names to the allNames array
   troupes.forEach((troupe) => {
     allNames.push(troupe.name);
   });
 
+  //check if there are any names to export
   if (allNames.length === 0) {
     console.log('No names to export.');
     returnToMenu();
     return;
   }
 
+  //join all the names with newlines to create content for the text file
   let content = allNames.join('\n');
+
+  //get the file name from user input
   let fileName = prompt('Enter the file name to export: ');
 
   try {
+    //write the content to a text file with the provided file name
     fs.writeFileSync(`${fileName}.txt`, content);
     console.log(`Names exported to ${fileName}.txt`);
   } catch (err) {
+    //catch and log errors that occur during the file writing process
     console.error('Error exporting names:', err);
   } finally {
+    //return to the menu regardless of success or failure
     returnToMenu();
   }
 }
 
-//function to show summary description of troupe
-function provideSummaryDescriptionOfTroupe() {
+
+//function to show summary description of a troupe
+function provideSummaryDescriptionOfTroupe() { 
   console.log(border);
-  console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
+  console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m'); //colour coding and bordering
   console.log(border);
 
-  console.log('List of Troupes:'); // Display the list of troupes
+  console.log('List of Troupes:'); //display the list of troupes
   troupes.forEach((troupe, index) => {
-    console.log(`${index + 1}. ${troupe.name}`);
+    console.log(`${index + 1}. ${troupe.name}`); //logs troupe name from index
   });
 
+  //ask the user to select a troupe by name or number
   const troupeSelection = prompt('Select a troupe by name or number: ');
+
+  //determine the selected troupe based on user input
   const selectedTroupe =
     isNaN(troupeSelection) ?
-    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :
+    troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) : //parses everything to lower case to make input case insensitive
     troupes[parseInt(troupeSelection) - 1];
 
+  //handle invalid troupe selection
   if (!selectedTroupe || !selectedTroupe.members || !Array.isArray(selectedTroupe.members)) {
     console.log('Invalid troupe or no members found.');
     returnToMenu();
@@ -276,15 +290,17 @@ function provideSummaryDescriptionOfTroupe() {
   console.log(border);
 
   const instrumentCount = {};
+  //count the number of each instrument in the selected troupe
   selectedTroupe.members.forEach(member => {
     instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1;
   });
 
+  //display the count of each instrument in the selected troupe
   for (const instrument in instrumentCount) {
     console.log(`\x1b[36m|\x1b[0m   ${getInstrumentEmoji(instrument)} ${instrument.padEnd(18)}: ${instrumentCount[instrument].toString().padStart(3)} \x1b[36m|\x1b[0m`);
   }
 
-  console.log(border);
+  console.log(border); //bordering
   returnToMenu();
 }
 
@@ -294,7 +310,7 @@ function provideDetailedDescriptionOfTroupe() {
   console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
   console.log(border);
   troupes.forEach((troupe, index) => {
-    console.log(`${index + 1}. ${troupe.name}`);
+    console.log(`${index + 1}. ${troupe.name}`); 
   });
   console.log(border);
 
@@ -363,9 +379,9 @@ function returnToMenu(afterOperation = false) {
   if (!afterOperation) {
     const returnOption = prompt('Press Enter to return to the menu.');
     if (returnOption === '') {
-      return true; // Return a boolean value to indicate to the caller to show the menu
+      return true; //return a boolean value to indicate to the caller to show the menu
     } else {
-      return false; // Return false to signal not showing the menu
+      return false; //return false to signal not showing the menu
     }
   }
   return false;
@@ -387,7 +403,7 @@ function showMenu() {
   console.log('\x1b[36m|\x1b[0m   \x1b[35m9. Exit the program             \x1b[36m|\x1b[0m');
   console.log('\x1b[36m=====================================\x1b[0m');
 }
-
+//function to exit program, uses process.exit
 function exitProgram() {
   console.log('Exiting the program. Goodbye!');
   process.exit();
@@ -399,12 +415,12 @@ function getInstrumentEmoji(instrument) {
       return '🎸';
     case 'bassist':
       return '🎻';
-    case 'percussionist':
+    case 'percussionist':  //switch statement to return emojis for display information
       return '🥁';
     case 'flautist':
       return '🎶';
     default:
-      return ''; // Return empty string for unknown instruments
+      return ''; //return empty string for unknown instruments, just must have a default case so I included this null value
   }
 }
 
