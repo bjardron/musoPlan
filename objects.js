@@ -1,5 +1,5 @@
 const prompt = require('prompt-sync')(); //calls prompt sync to prompt the user for inputs
-const fs = require('fs'); //calls the file system from node.js to import and export text files
+
 
 
 //musician is the parent class and handles name, years playing, the hourly rate and the instrument played by the musician
@@ -12,7 +12,7 @@ class Musician {
     }
   }
 
-  //these are the instrument classes, they include supers from the parent class and the interesting facts for each instrument
+  //instrument classes, they include supers from the parent class and the interesting facts for each instrument
 
   class Guitarist extends Musician {
     constructor(name, yearsPlaying, hourlyRate, strings) {
@@ -56,7 +56,6 @@ class Musician {
   }
 
 //the troupe class uses an empty list to store member while the program is running. 
-//if data needs to be stored locally or online this can be done with an sql database. 
   class Troupe {
     constructor(name, genre) {
       this.name = name;
@@ -70,7 +69,6 @@ class Musician {
   }
 //exports the classes to be called by index.js
   module.exports = { 
-  Musician,
   Guitarist,
   Bassist, 
   Percussionist,
