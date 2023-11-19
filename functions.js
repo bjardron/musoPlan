@@ -305,72 +305,65 @@ function provideSummaryDescriptionOfTroupe() {
 }
 
 function provideDetailedDescriptionOfTroupe() {
-  //displaying a list of available troupes
   console.log(border);
   console.log('\x1b[34m|      \x1b[35mList \x1b[32mof \x1b[33mTroupes\x1b[34m         |\x1b[0m');
   console.log(border);
   troupes.forEach((troupe, index) => {
-  console.log(`${index + 1}. ${troupe.name}`); 
+    console.log(`${index + 1}. ${troupe.name}`);
   });
   console.log(border);
 
-  //asking the user to select a troupe by name or number
   const troupeSelection = prompt('Select a troupe by name or number: ');
-  //determining the selected troupe based on user input
   const selectedTroupe =
     isNaN(troupeSelection) ?
     troupes.find(troupe => troupe.name.toLowerCase() === troupeSelection.toLowerCase()) :
     troupes[parseInt(troupeSelection) - 1];
 
-  //handling invalid troupe selection
   if (!selectedTroupe) {
     console.log('Invalid troupe selection.');
     returnToMenu();
     return;
   }
-  //displaying the name of the selected troupe
+
   console.log(border);
   console.log(`Troupe Name: ${selectedTroupe.name}`);
   console.log(border);
 
-  //object to count the number of each instrument in the selected troupe
   const instrumentCount = {};
- //counting the number of members playing each instrument in the selected troupe
+
   selectedTroupe.members.forEach(member => {
     instrumentCount[member.instrument] = instrumentCount[member.instrument] + 1 || 1;
   });
-  //iterating through each instrument in the instrumentCount object
+
+
   for (const instrument in instrumentCount) {
     console.log(border);
-    console.log(`${instrument}s:`); // Displaying the instrument name (plural form)
+    console.log(`\x1b[34m${instrument} (${getInstrumentEmoji(instrument)}) : \x1b[0m`);
 
-    //filtering members who play the current instrument
     const instrumentMembers = selectedTroupe.members.filter(member => member.instrument === instrument);
 
-    //displaying information about members playing the current instrument
     instrumentMembers.forEach(member => {
-      console.log(`Name: ${member.name}, Hourly Rate: $${member.hourlyRate}`);
-      //displaying an interesting fact for specific instruments
+      console.log(`| \x1b[32mName: ${member.name}         \x1b[32m| \x1b[32mYears Playing: ${member.yearsPlaying.toString()}        \x1b[32m| \x1b[32mHourly Rate: $${member.hourlyRate.toString().padEnd(3)} \x1b[0m|\x1b[32m`);
       if (instrument === 'Guitarist') {
         const guitarist = new Guitarist('', 0, 0, '');
-        console.log(`Interesting Fact: ${guitarist.getInterestingFact()}`);
+        console.log(`| \x1b[33mInteresting Fact: ${guitarist.getInterestingFact()}                \x1b[0m`);
       } else if (instrument === 'Bassist') {
         const bassist = new Bassist('', 0, 0);
-        console.log(`Interesting Fact: ${bassist.getInterestingFact()}`);
+        console.log(`| \x1b[33mInteresting Fact: ${bassist.getInterestingFact()}                \x1b[0m`);
       } else if (instrument === 'Percussionist') {
         const percussionist = new Percussionist('', 0, 0);
-        console.log(`Interesting Fact: ${percussionist.getInterestingFact()}`);
+        console.log(`| \x1b[33mInteresting Fact: ${percussionist.getInterestingFact()}                \x1b[0m`);
       } else if (instrument === 'Flautist') {
         const flautist = new Flautist('', 0, 0);
-        console.log(`Interesting Fact: ${flautist.getInterestingFact()}`);
+        console.log(`| \x1b[33mInteresting Fact: ${flautist.getInterestingFact()}                \x1b[0m`);
       }
     });
     console.log(border);
   }
 
-  //returns user to menu
   returnToMenu();
 }
+
 
 function returnToMenu(afterOperation = false) { //uses afterOperation as a parameter with a default value of false
   if (!afterOperation) {
