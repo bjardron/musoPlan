@@ -32,7 +32,6 @@ function registerMusician() {
     return;
   }
 
-  const border = '\x1b[36m================================\x1b[0m';
   console.log(border)
   console.log('\x1b[36m|     Available Instruments    |\x1b[0m');
   console.log(border);
