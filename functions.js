@@ -11,6 +11,23 @@ const {
 let importedNames = [];
 let musicians = [];
 let troupes = [];
+
+//================================================================
+//sample data, remove before sending to user.
+const sampleGuitarist = new Guitarist('Jimmy Hendrix', 2, 50, '6');
+const sampleBassist = new Bassist('John Lennon', 3, 60);
+const samplePercussionist = new Percussionist('Jimmy Buffet', 4, 70);
+const sampleFlautist = new Flautist('Yoko Ono', 5, 80);
+musicians.push(sampleGuitarist, sampleBassist, samplePercussionist, sampleFlautist);
+const sampleTroupe1 = new Troupe('Fantastic Fusion', 'Jazz');
+const sampleTroupe2 = new Troupe('Rhythmic Rebels', 'Rock');
+const sampleTroupe3 = new Troupe('Melodic Masters', 'Pop');
+const sampleTroupe4 = new Troupe('Harmonic Heroes', 'Classical');
+const sampleTroupe5 = new Troupe('Sonic Symphony', 'Experimental');
+troupes.push(sampleTroupe1, sampleTroupe2, sampleTroupe3, sampleTroupe4, sampleTroupe5);
+//sample data, remove before sending to user.
+//================================================================
+
 const border = '\x1b[36m================================\x1b[0m';
 
 //this function registers a musician asks the hourly rate, the instrument and returns to the menu once registered
@@ -183,7 +200,7 @@ function calculateCost() {
   let totalCost = 0;
 
   selectedTroupe.members.forEach(member => {
-    totalCost += member.hourlyRate * duration; // Calculate cost using the provided duration
+    totalCost += member.hourlyRate * duration; //calculate cost using the provided duration
   });
 
   console.log(`The cost of sending ${selectedTroupe.name} for ${duration} hours will be $${totalCost}.`);
