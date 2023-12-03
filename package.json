@@ -1,0 +1,11 @@
+{
+  "name": "musoplan",
+  "version": "1.1.1",
+  "description": "terminal based music management software",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Broderick",
+  "license": "ISC"
+}
